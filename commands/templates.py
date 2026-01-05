@@ -10,7 +10,9 @@ from utils import rpc, lang, log
 class TemplatesCommands(commands.Cog):
     def __init__(self, bot):
         self.bot: commands.Bot = bot
-        self.templates_assets = rpc.get_raw_json("Sitois", "Tyler's SB", "assets.json")
+        self.templates_assets = rpc.get_raw_json("tyler7exe", "Tylers-SB", "assets.json")
+        if self.templates_assets is None:
+            self.templates_assets = {}
         self.today_date = datetime.datetime.today()
 
     @commands.command()
@@ -258,7 +260,7 @@ class TemplatesCommands(commands.Cog):
             await ctx.message.edit("📱 Template \"WebDeck\".", delete_after=config_selfbot.deltime)
         elif choice == "":
             assets = {"large_image": self.templates_assets[""]["large_image"],
-                      "large_text": "github.com/Sitois/Tyler's SB",
+                      "large_text": "github.com/tyler7exe/Tylers-SB",
                       "small_image": self.templates_assets[""]["small_image"],
                       "small_text": "On GitHub!"
                       }
@@ -451,5 +453,7 @@ class TemplatesCommands(commands.Cog):
 
     @commands.command()
     async def reload(self, ctx: commands.Context):
-        self.templates_assets = rpc.get_raw_json("Sitois", "Tyler's SB", "assets.json")
+        self.templates_assets = rpc.get_raw_json("tyler7exe", "Tylers-SB", "assets.json")
+        if self.templates_assets is None:
+            self.templates_assets = {}
         await ctx.message.edit(lang.text('template_reload'), delete_after=config_selfbot.deltime)
