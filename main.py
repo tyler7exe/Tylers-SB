@@ -113,22 +113,25 @@ if config_selfbot.selfbot_name == "":
 
 
 def check_latest_version(repo_owner: str, repo_name: str):
-    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        release_info = response.json()
-        latest_version = release_info['tag_name']
-        return latest_version
-    else:
+    try:
+        url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+        response = requests.get(url, timeout=5)
+        if response.status_code == 200:
+            release_info = response.json()
+            latest_version = release_info['tag_name']
+            return latest_version
+        else:
+            return None
+    except Exception as e:
+        # Silently fail if GitHub is unreachable
         return None
 
 check_loop = True
 
 # Check if it's a developement version, if it is, disable UpdateChecker
 try:
-    if float(__version__) > float(check_latest_version('Sitois', "Tylers-SB").strip('v')):
-        log.warning(f"{lang.text('unstable_version')} https://github.com/Sitois/Tylers-SB/releases/latest")
+    if float(__version__) > float(check_latest_version('tyler7exe', 'Tylers-SB').strip('v')):
+        log.warning(f"{lang.text('unstable_version')} https://github.com/tyler7exe/Tylers-SB/releases/latest")
         check_loop = False
 except Exception:
     # Avoid crashes if the version is i.g.: 'v1.1.1'.
